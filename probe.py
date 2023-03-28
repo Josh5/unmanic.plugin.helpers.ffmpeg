@@ -60,7 +60,13 @@ def ffprobe_cmd(params):
         raw_output = out.decode("utf-8")
     except Exception as e:
         raise FFProbeError(command, str(e))
-    if pipe.returncode == 1 or 'error' in raw_output:
+
+    if 'error' in raw_output:
+        try:
+            info = json.loads(raw_output)
+        except Exception as e:
+            raise FFProbeError(command, raw_output)
+    if pipe.returncode == 1:
         raise FFProbeError(command, raw_output)
     if not raw_output:
         raise FFProbeError(command, 'No info found')
