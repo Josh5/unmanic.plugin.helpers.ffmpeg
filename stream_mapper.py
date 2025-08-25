@@ -389,13 +389,6 @@ class StreamMapper(object):
     def set_output_null(self):
         """Set the output container to NULL for the FFmpeg args"""
         self.output_file = '-'
-        if os.name == "nt":
-            # Windows uses NUL instead
-            self.output_file = 'NUL'
-        main_options = {
-            "-f": 'null',
-        }
-        self.__build_args(self.main_options, **main_options)
 
     def set_ffmpeg_generic_options(self, *args, **kwargs):
         """
@@ -496,6 +489,10 @@ class StreamMapper(object):
         if not self.output_file:
             raise Exception("Output file has not been set")
         elif self.output_file == '-':
+            if os.name == "nt":
+                # Windows uses NUL instead
+                self.output_file = 'NUL'
+            args += ['-f', 'null']
             args += [self.output_file]
         else:
             args += ['-y', self.output_file]
