@@ -233,3 +233,20 @@ class Probe(object):
     def get(self, key, default=None):
         """Return the value of the given key from the probe dictionary"""
         return self.probe_info.get(key, default)
+
+    def get_video_stream_pix_fmt(self, default="nv12"):
+        """
+        Return the pixel format of the first video stream in the probe info.
+        Falls back to `default` (nv12) if not available.
+
+        Example outputs:
+          - 'nv12'
+          - 'yuv420p'
+          - 'p010le'
+          - 'yuv420p10le'
+        """
+        streams = self.probe_info.get("streams") or []
+        for st in streams:
+            if st.get("codec_type") == "video":
+                return st.get("pix_fmt", default)
+        return default
