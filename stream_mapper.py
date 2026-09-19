@@ -79,6 +79,7 @@ class StreamMapper(object):
         self.generic_options = [
             '-hide_banner',
             '-loglevel', 'info',
+            '-fflags', '+genpts',
         ]
 
         # Set default Main options
